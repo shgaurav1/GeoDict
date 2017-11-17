@@ -1,0 +1,82 @@
+{
+    "mappings": {
+        "_default_": {
+            "properties": {
+                "de":{
+                    "type": "keyword"
+                },
+                "en":{
+                    "type": "keyword"
+                },
+                "es":{
+                    "type": "keyword"
+                },
+                "fr":{
+                    "type": "keyword"
+                },
+                "aliases":{
+                  "type":"nested",
+                  "properties": {
+                    "de": {
+                      "type": "keyword"
+                    },
+                    "en": {
+                      "type": "keyword"
+                    },
+                    "es": {
+                      "type": "keyword"
+                    },
+                    "fr": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "instance_of": {
+                    "type": "keyword"
+                },
+                "coord": {
+                    "type": "geo_point"
+                },
+                "geonameID": {
+                    "type": "keyword"
+                },
+                "class": {
+                    "type": "keyword"
+                },
+                "id": {
+                    "type": "keyword"
+                },
+                "country": {
+                    "type": "keyword"
+                },
+                "continent": {
+                    "type": "keyword"
+                },
+                "score": {
+                    "type": "float"
+                },
+                "osmID": {
+                    "type": "keyword"
+                },
+                "path": {
+                    "type": "keyword"
+                },
+                "P47": {
+                    "type": "keyword"
+                },
+                "P131": {
+                    "type": "keyword"
+                },
+                "P706": {
+                    "type": "keyword"
+                },
+                 "geometry": {
+                    "type": "geo_shape",
+                    "tree": "quadtree",
+                    "precision": "100m"
+                }
+
+            }
+        }
+    }
+}

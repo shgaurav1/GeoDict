@@ -1,0 +1,10 @@
+{
+  "osm_boundaries_dir":"osm-boundaries",
+  "temp_dir":"temp",
+  "wikidata_dump":"latest-all.json.gz",
+  "lang_list":["en","fr","de","es"],
+  "properties_to_extract":[
+    {"id":"P47","isMultiple":true,"type":"EntityID","mappings":"keyword","mappings_details":{}},
+    {"id":"P1082","isMultiple":true,"type":"Quantity","mappings":"nested","mappings_details":{"properties":{"quantity":{"type":"long"},"date":{"type":"keyword"}}}}
+  ]
+}
