@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Geodict Explorer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
+  integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw=="
+  crossorigin=""/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://use.fontawesome.com/0f8e7e0cfb.js"></script>
+  <style media="all">
+    td .field{
+      font-weight: bold;
+    }
+    .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+    .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+    .autocomplete-selected { background: #F0F0F0; }
+    .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+    .autocomplete-group { padding: 2px 5px; }
+    .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+  </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse ">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><i class="fa fa-globe"></i> <span>Geodict Explorer</span></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav ">
+            <li><a href="#">About</a></li>
+          </ul>
+          <form class="navbar-form">
+            <input class="form-control" name="query" id="autocomplete" placeholder="Search..." type="text">
+          </form>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="page-header">
+          <h1 class="text-center display-2">{{entry["en"]}}<small class="text-muted">{{entry["id"]}}</small></h1>
+        </div>
+
+        <div class="col-lg-6">
+          <h3 class="text-center">On the Map</h3>
+          <div id="mapid" class="col-lg-12" style="height:500px">
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <h3 class="text-center">Labels</h3>
+          <table class="table table-bordered">
+            <tr>
+              <td class="field"><strong>FR</strong></td>
+              <td>{{entry["fr"]}}</td>
+            </tr>
+            <tr>
+              <td class="field"><strong>EN</strong></td>
+              <td>{{entry["en"]}}</td>
+            </tr>
+            <tr>
+              <td class="field"><strong>ES</strong></td>
+              <td>{{entry["es"]}}</td>
+            </tr>
+            <tr>
+              <td class="field"><strong>DE</strong></td>
+              <td>{{entry["de"]}}</td>
+            </tr>
+          </table>
+
+          <h3 class="text-center">Related Data</h3>
+          <table class="table table-bordered">
+            {% for k in entry %}
+            {% if not k in ["fr","en","coord","es","de","P1082"] %}
+              <tr>
+                <td class="field"><strong>{{k}}</strong></td>
+                <td>{{entry[k]}}</td>
+              </tr>
+            {% endif %}
+            {% endfor %}
+
+          </table>
+        </div>
+      </div>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='js/jquery.autocomplete.min.js')}}"></script>
+    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"
+      integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA=="
+      crossorigin=""></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    //Init
+    var mymap = L.map('mapid').setView({{coord}},4); // Use centroid
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiamFja2NpcmFkIiwiYSI6ImNqNHBlcDFjejI3eWEyd283Mmc0ZjU4eGYifQ.a7xObyrxWZAiUJJya0GcEg'
+}).addTo(mymap);
+
+    {% if coord %}
+    var circle = L.circle({{coord}}, {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 500
+}).addTo(mymap);
+    {% endif %}
+    {% if poly %}
+    {% for k in poly %}
+    L.polygon({{k}}).addTo(mymap);
+    {% endfor %}
+    {% endif %}
+    </script>
+
+    <script type="text/javascript">
+    $("#autocomplete").devbridgeAutocomplete({
+
+                            //lookup: countries,
+
+                            serviceUrl:'/autocomplete', //tell the script where to send requests
+                            type:'GET',
+                             width: 450, //set width
+
+                            preventBadQueries:false,
+                            onSelect: function (suggestion) {
+
+                            document.location.href="/"+suggestion.data// localhost/Q142
+
+                            },
+
+                            showNoSuggestionNotice: true,
+
+                            noSuggestionNotice: 'Sorry, no matching results',
+
+             });
+    </script>
+  </body>
+</html>
