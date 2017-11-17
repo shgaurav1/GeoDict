@@ -1,0 +1,9 @@
+wikidata/__pycache__/*
+.idea/*
+osm-boundaries/*
+config/__pycache__/
+gis/__pycache__/*
+latest-all.json.gz
+temp/*
+custom_process/__pycache__/*
+out_final.json
